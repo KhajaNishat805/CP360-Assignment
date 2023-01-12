@@ -5,7 +5,6 @@ function LoginForm() {
     const [password, setPassword] = useState('')
     const [mailError, setMailError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
-    console.log("feilds value ===>",mail,password);
     const navigate = useNavigate()
     const handleMailChange = (e) => {
     setMail(e.target.value) 
@@ -15,25 +14,25 @@ function LoginForm() {
     setPassword(e.target.value)
     setPasswordError(false)
     }
-    
+    const validateEmail = (email) => {
+      const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    };
     const handleSubmit = (e) => {
     e.preventDefault();
-    if (!mail) {
-        setMailError(true);
-    }
-    if(password){
+    validateEmail(mail) ? setMailError(false): setMailError(true);
+    if(!password) {
+      setPasswordError(true)
+  }else{
         let val= password.split('')
             let result=val.map(Number).reduce((a,b)=>a+b)
-        console.log("addition==>",result);
         if(result === 10){
-            console.log('Form submitted successfully');
             navigate('/home')
         }else{
-            setPasswordError('Password addition must be equal to 10');  
+            setPasswordError(true);  
         }
-    }else if(!password) {
-        setPasswordError(true)
-    }
+    } 
     }
 
   return (
@@ -45,7 +44,7 @@ function LoginForm() {
       <div className="input-container">
         <label>Email</label>
         <input
-          type="email"
+          type="text"
           name="email"
           value={mail}
           onChange={(e)=>handleMailChange(e)}
